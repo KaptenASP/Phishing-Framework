@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phishing_framework/attack.dart';
 import 'package:phishing_framework/phishing_homepage.dart';
 
 void main() {
@@ -8,7 +9,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => PhishingHomePage(
-                        title: e,
+                        attack: PhishingAttack(e, "", ""),
                       ),
                     ),
                   );
