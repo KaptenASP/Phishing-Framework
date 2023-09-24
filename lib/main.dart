@@ -30,7 +30,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<String> _pages = List.empty(growable: true);
+  final List<PhishingAttack> _pages = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +53,63 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             FloatingActionButton.extended(
-                onPressed: () {
-                  _pages.add("Page ${_pages.length + 1}");
-                  setState(() {});
-                },
+                onPressed: () => showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        final TextEditingController attackNameontroller =
+                            TextEditingController();
+                        final TextEditingController attackDescController =
+                            TextEditingController();
+                        final TextEditingController attackURLController =
+                            TextEditingController();
+
+                        return AlertDialog(
+                          title: const Text("New Attack"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                decoration: const InputDecoration(
+                                    labelText: "Attack Name"),
+                                controller: attackNameontroller,
+                              ),
+                              TextField(
+                                decoration: const InputDecoration(
+                                    labelText: "Attack URL"),
+                                controller: attackURLController,
+                              ),
+                              TextField(
+                                decoration: const InputDecoration(
+                                    labelText: "Attack Description"),
+                                controller: attackDescController,
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(
+                                  () {
+                                    _pages.add(
+                                      PhishingAttack(
+                                          attackNameontroller.text,
+                                          attackDescController.text,
+                                          attackURLController.text),
+                                    );
+                                  },
+                                );
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Create"),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                 label: const Text("New Attack")),
             const ListTile(
               leading: Icon(Icons.message),
@@ -82,15 +135,15 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => PhishingHomePage(
-                        attack: PhishingAttack(e, "", ""),
+                        attack: e,
                       ),
                     ),
                   );
                 },
                 child: ListTile(
-                  leading: CircleAvatar(child: Text(e.characters.first)),
-                  title: Text(e),
-                  subtitle: Text('Click to navigate to $e'),
+                  leading: CircleAvatar(child: Text(e.name.characters.first)),
+                  title: Text(e.name),
+                  subtitle: Text('Click to navigate to ${e.name}'),
                   trailing: const Icon(Icons.favorite_rounded),
                 ),
               ),
