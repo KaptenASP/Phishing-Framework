@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
+import 'package:phishing_framework/colours.dart';
 import 'package:phishing_framework/phishing_homepage.dart';
 
 void main() {
@@ -14,7 +15,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Phishing Framework',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSwatch(
+          brightness: Brightness.light,
+          backgroundColor: AppScheme.backgroundColor,
+          cardColor: AppScheme.backgroundColor,
+        ),
         useMaterial3: true,
       ),
       home: const HomePage(),
@@ -30,87 +35,103 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<PhishingAttack> _pages = List.empty(growable: true);
+  final List<PhishingAttack> _phishing_attacks = [];
+
+  @override
+  void initState() {
+    _phishing_attacks.addAll(loadAllAttacks());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Aditya's Phishing Framework")),
+      appBar: AppBar(
+        title: Text(
+          "Aditya's Phishing Framework",
+          style: AppScheme.headlineStyle,
+        ),
+        actions: [
+          FloatingActionButton(
+            backgroundColor: AppScheme.primaryColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                final TextEditingController attackNameontroller =
+                    TextEditingController();
+                final TextEditingController attackDescController =
+                    TextEditingController();
+                final TextEditingController attackURLController =
+                    TextEditingController();
+
+                return AlertDialog(
+                  title: const Text("New Attack"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        decoration:
+                            const InputDecoration(labelText: "Attack Name"),
+                        controller: attackNameontroller,
+                      ),
+                      TextField(
+                        decoration:
+                            const InputDecoration(labelText: "Attack URL"),
+                        controller: attackURLController,
+                      ),
+                      TextField(
+                        decoration: const InputDecoration(
+                            labelText: "Attack Description"),
+                        controller: attackDescController,
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Cancel"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(
+                          () {
+                            _phishing_attacks.add(PhishingAttack.create(
+                              attackNameontroller.text,
+                              attackURLController.text,
+                              attackDescController.text,
+                            ));
+
+                            saveAllAttacks(_phishing_attacks);
+                          },
+                        );
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Create"),
+                    ),
+                  ],
+                );
+              },
+            ),
+            child: const Icon(Icons.add),
+          ),
+        ],
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: AppScheme.primaryColor,
               ),
               child: Text(
                 'More Options',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppScheme.headlineColor,
                   fontSize: 24,
                 ),
               ),
             ),
-            FloatingActionButton.extended(
-                onPressed: () => showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        final TextEditingController attackNameontroller =
-                            TextEditingController();
-                        final TextEditingController attackDescController =
-                            TextEditingController();
-                        final TextEditingController attackURLController =
-                            TextEditingController();
-
-                        return AlertDialog(
-                          title: const Text("New Attack"),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                decoration: const InputDecoration(
-                                    labelText: "Attack Name"),
-                                controller: attackNameontroller,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                    labelText: "Attack URL"),
-                                controller: attackURLController,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                    labelText: "Attack Description"),
-                                controller: attackDescController,
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                setState(
-                                  () {
-                                    _pages.add(
-                                      PhishingAttack(
-                                          attackNameontroller.text,
-                                          attackDescController.text,
-                                          attackURLController.text),
-                                    );
-                                  },
-                                );
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Create"),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                label: const Text("New Attack")),
             const ListTile(
               leading: Icon(Icons.message),
               title: Text('Messages'),
@@ -127,7 +148,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: ListView(
-        children: _pages
+        children: _phishing_attacks
             .map(
               (e) => InkWell(
                 onTap: () {
@@ -141,9 +162,16 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 child: ListTile(
-                  leading: CircleAvatar(child: Text(e.name.characters.first)),
+                  leading: CircleAvatar(
+                    backgroundColor: AppScheme.primaryColor,
+                    foregroundColor: AppScheme.paragraphColor,
+                    child: Text(e.name.characters.first.toUpperCase(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
                   title: Text(e.name),
-                  subtitle: Text('Click to navigate to ${e.name}'),
+                  subtitle: Text(e.description),
                   trailing: const Icon(Icons.favorite_rounded),
                 ),
               ),
