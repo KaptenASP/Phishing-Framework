@@ -80,159 +80,158 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: Padding(
+      body: ListView(
         padding: EdgeInsets.only(
           top: 20,
           left: MediaQuery.of(context).size.width / 3,
           right: MediaQuery.of(context).size.width / 3,
           bottom: 20,
         ),
-        child: Column(
-          children: [
-            Text(
-              "Aditya's Phishing Framework",
-              style: AppScheme.headlineStyle,
-            ),
-            Row(
-              children: [
-                Container(
-                  width: 30,
-                  height: 30,
-                  margin: const EdgeInsets.all(10.0),
-                  child: FloatingActionButton(
-                    backgroundColor: AppScheme.primaryColor,
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        final TextEditingController attackNameontroller =
-                            TextEditingController();
-                        final TextEditingController attackDescController =
-                            TextEditingController();
-                        final TextEditingController attackURLController =
-                            TextEditingController();
+        children: [
+          Text(
+            "Aditya's Phishing Framework",
+            style: AppScheme.headlineStyle,
+          ),
+          Row(
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                margin: const EdgeInsets.all(10.0),
+                child: FloatingActionButton(
+                  heroTag: "add_attack",
+                  backgroundColor: AppScheme.primaryColor,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      final TextEditingController attackNameontroller =
+                          TextEditingController();
+                      final TextEditingController attackDescController =
+                          TextEditingController();
+                      final TextEditingController attackURLController =
+                          TextEditingController();
 
-                        return AlertDialog(
-                          title: const Text("New Attack"),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                decoration: const InputDecoration(
-                                    labelText: "Attack Name"),
-                                controller: attackNameontroller,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                    labelText: "Attack URL"),
-                                controller: attackURLController,
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                    labelText: "Attack Description"),
-                                controller: attackDescController,
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Cancel"),
+                      return AlertDialog(
+                        title: const Text("New Attack"),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              decoration: const InputDecoration(
+                                  labelText: "Attack Name"),
+                              controller: attackNameontroller,
                             ),
-                            TextButton(
-                              onPressed: () {
-                                setState(
-                                  () {
-                                    _phishingAttacks.add(PhishingAttack.create(
-                                      attackNameontroller.text,
-                                      attackURLController.text,
-                                      attackDescController.text,
-                                    ));
-                                    print(_phishingAttacks.last.id);
-                                    saveAllAttacks(_phishingAttacks);
-                                  },
-                                );
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Create"),
+                            TextField(
+                              decoration: const InputDecoration(
+                                  labelText: "Attack URL"),
+                              controller: attackURLController,
+                            ),
+                            TextField(
+                              decoration: const InputDecoration(
+                                  labelText: "Attack Description"),
+                              controller: attackDescController,
                             ),
                           ],
-                        );
-                      },
-                    ),
-                    child: const Icon(Icons.add),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(
+                                () {
+                                  _phishingAttacks.add(PhishingAttack.create(
+                                    attackNameontroller.text,
+                                    attackURLController.text,
+                                    attackDescController.text,
+                                  ));
+                                  saveAllAttacks(_phishingAttacks);
+                                },
+                              );
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Create"),
+                          ),
+                        ],
+                      );
+                    },
                   ),
+                  child: const Icon(Icons.add),
                 ),
-                Container(
-                  width: 30,
-                  height: 30,
-                  margin: const EdgeInsets.all(10.0),
-                  child: FloatingActionButton(
-                    backgroundColor: AppScheme.primaryColor,
-                    onPressed: () async {
-                      Map<String, dynamic> m = Map<String, dynamic>.from(
-                        await Session.instance.getVictims(),
+              ),
+              Container(
+                width: 30,
+                height: 30,
+                margin: const EdgeInsets.all(10.0),
+                child: FloatingActionButton(
+                  heroTag: "sync",
+                  backgroundColor: AppScheme.primaryColor,
+                  onPressed: () async {
+                    Map<String, dynamic> m = Map<String, dynamic>.from(
+                      await Session.instance.getVictims(),
+                    );
+
+                    List<dynamic> victims = m["data"];
+
+                    for (var victim in victims) {
+                      Map<String, String> v = Map<String, String>.from(
+                        victim,
                       );
 
-                      List<dynamic> victims = m["data"];
-
-                      for (var victim in victims) {
-                        Map<String, String> v = Map<String, String>.from(
-                          victim,
-                        );
-
-                        // Get the attack
-                        for (PhishingAttack attack in _phishingAttacks) {
-                          if (attack.id == v["Id"]) {
-                            attack.victims.add(
-                              Victim.withPassword(
-                                v["Username"] ?? "",
-                                v["Password"] ?? "",
-                              ),
-                            );
-                          }
+                      // Get the attack
+                      for (PhishingAttack attack in _phishingAttacks) {
+                        if (attack.id == v["Id"]) {
+                          attack.victims.add(
+                            Victim.withPassword(
+                              v["Username"] ?? "",
+                              v["Password"] ?? "",
+                            ),
+                          );
                         }
-
-                        setState(() {});
                       }
+
+                      setState(() {});
+                    }
+                  },
+                  child: const Icon(Icons.sync),
+                ),
+              )
+            ],
+          ),
+          Column(
+            children: _phishingAttacks
+                .map(
+                  (e) => InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PhishingHomePage(
+                            attack: e,
+                          ),
+                        ),
+                      );
                     },
-                    child: const Icon(Icons.sync),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: AppScheme.primaryColor,
+                        foregroundColor: AppScheme.paragraphColor,
+                        child: Text(e.name.characters.first.toUpperCase(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      title: Text(e.name),
+                      subtitle: Text(e.description),
+                      trailing: const Icon(Icons.favorite_rounded),
+                    ),
                   ),
                 )
-              ],
-            ),
-            Column(
-              children: _phishingAttacks
-                  .map(
-                    (e) => InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PhishingHomePage(
-                              attack: e,
-                            ),
-                          ),
-                        );
-                      },
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: AppScheme.primaryColor,
-                          foregroundColor: AppScheme.paragraphColor,
-                          child: Text(e.name.characters.first.toUpperCase(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        title: Text(e.name),
-                        subtitle: Text(e.description),
-                        trailing: const Icon(Icons.favorite_rounded),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            )
-          ],
-        ),
+                .toList(),
+          )
+        ],
       ),
     );
   }

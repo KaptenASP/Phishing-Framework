@@ -53,6 +53,27 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
               ),
             ],
           ),
+          Text(
+            "Victims",
+            style: AppScheme.secondaryHeader,
+          ),
+          SizedBox(
+            height: 200,
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: widget.attack.victims.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(
+                    "email: ${widget.attack.victims[index].email}",
+                  ),
+                  subtitle: Text(
+                    "password: ${widget.attack.victims[index].password}",
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
