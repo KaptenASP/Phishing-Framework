@@ -1,4 +1,4 @@
-import 'package:phishing_framework/file_helper.dart';
+import 'package:phishing_framework/helpers/file_helper.dart';
 import 'package:phishing_framework/victim.dart';
 
 String idGenerator() {

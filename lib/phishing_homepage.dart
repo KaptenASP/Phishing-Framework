@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
-import 'package:phishing_framework/AppScheme.dart';
+import 'package:phishing_framework/app_scheme.dart';
 
 class PhishingHomePage extends StatefulWidget {
   final PhishingAttack attack;
