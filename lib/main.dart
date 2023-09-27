@@ -46,72 +46,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          // FloatingActionButton(
-          //   backgroundColor: AppScheme.primaryColor,
-          //   onPressed: () => showDialog(
-          //     context: context,
-          //     builder: (BuildContext context) {
-          //       final TextEditingController attackNameontroller =
-          //           TextEditingController();
-          //       final TextEditingController attackDescController =
-          //           TextEditingController();
-          //       final TextEditingController attackURLController =
-          //           TextEditingController();
-
-          //       return AlertDialog(
-          //         title: const Text("New Attack"),
-          //         content: Column(
-          //           mainAxisSize: MainAxisSize.min,
-          //           children: [
-          //             TextField(
-          //               decoration:
-          //                   const InputDecoration(labelText: "Attack Name"),
-          //               controller: attackNameontroller,
-          //             ),
-          //             TextField(
-          //               decoration:
-          //                   const InputDecoration(labelText: "Attack URL"),
-          //               controller: attackURLController,
-          //             ),
-          //             TextField(
-          //               decoration: const InputDecoration(
-          //                   labelText: "Attack Description"),
-          //               controller: attackDescController,
-          //             ),
-          //           ],
-          //         ),
-          //         actions: [
-          //           TextButton(
-          //             onPressed: () => Navigator.pop(context),
-          //             child: const Text("Cancel"),
-          //           ),
-          //           TextButton(
-          //             onPressed: () {
-          //               setState(
-          //                 () {
-          //                   _phishing_attacks.add(PhishingAttack.create(
-          //                     attackNameontroller.text,
-          //                     attackURLController.text,
-          //                     attackDescController.text,
-          //                   ));
-
-          //                   saveAllAttacks(_phishing_attacks);
-          //                 },
-          //               );
-          //               Navigator.pop(context);
-          //             },
-          //             child: const Text("Create"),
-          //           ),
-          //         ],
-          //       );
-          //     },
-          //   ),
-          //   child: const Icon(Icons.add),
-          // ),
-        ],
-      ),
+      appBar: AppBar(),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
