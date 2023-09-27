@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
-import 'package:phishing_framework/AppScheme.dart';
+import 'package:phishing_framework/app_scheme.dart';
 import 'package:phishing_framework/phishing_homepage.dart';
 
 void main() {
@@ -35,11 +35,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<PhishingAttack> _phishing_attacks = [];
+  final List<PhishingAttack> _phishingAttacks = [];
 
   @override
   void initState() {
-    _phishing_attacks.addAll(loadAllAttacks());
+    _phishingAttacks.addAll(loadAllAttacks());
     super.initState();
   }
 
@@ -138,13 +138,13 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             setState(
                               () {
-                                _phishing_attacks.add(PhishingAttack.create(
+                                _phishingAttacks.add(PhishingAttack.create(
                                   attackNameontroller.text,
                                   attackURLController.text,
                                   attackDescController.text,
                                 ));
 
-                                saveAllAttacks(_phishing_attacks);
+                                saveAllAttacks(_phishingAttacks);
                               },
                             );
                             Navigator.pop(context);
@@ -159,7 +159,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Column(
-              children: _phishing_attacks
+              children: _phishingAttacks
                   .map(
                     (e) => InkWell(
                       onTap: () {
