@@ -8,6 +8,8 @@ class Victim {
 
   Victim(this.email);
 
+  Victim.withPassword(this.email, this.password);
+
   void setPassword(String password) {
     this.password = password;
   }

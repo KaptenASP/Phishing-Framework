@@ -3,6 +3,7 @@ import 'package:phishing_framework/attack.dart';
 import 'package:phishing_framework/app_scheme.dart';
 import 'package:phishing_framework/helpers/network_helper.dart';
 import 'package:phishing_framework/phishing_homepage.dart';
+import 'package:phishing_framework/victim.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,8 +47,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Session.instance.getVictims().then((value) => print(value.body));
-
     return Scaffold(
       appBar: AppBar(),
       drawer: Drawer(
@@ -94,72 +93,112 @@ class _HomePageState extends State<HomePage> {
               "Aditya's Phishing Framework",
               style: AppScheme.headlineStyle,
             ),
-            Container(
-              width: 30,
-              height: 30,
-              margin: const EdgeInsets.all(10.0),
-              child: FloatingActionButton(
-                backgroundColor: AppScheme.primaryColor,
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    final TextEditingController attackNameontroller =
-                        TextEditingController();
-                    final TextEditingController attackDescController =
-                        TextEditingController();
-                    final TextEditingController attackURLController =
-                        TextEditingController();
+            Row(
+              children: [
+                Container(
+                  width: 30,
+                  height: 30,
+                  margin: const EdgeInsets.all(10.0),
+                  child: FloatingActionButton(
+                    backgroundColor: AppScheme.primaryColor,
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        final TextEditingController attackNameontroller =
+                            TextEditingController();
+                        final TextEditingController attackDescController =
+                            TextEditingController();
+                        final TextEditingController attackURLController =
+                            TextEditingController();
 
-                    return AlertDialog(
-                      title: const Text("New Attack"),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextField(
-                            decoration:
-                                const InputDecoration(labelText: "Attack Name"),
-                            controller: attackNameontroller,
+                        return AlertDialog(
+                          title: const Text("New Attack"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                decoration: const InputDecoration(
+                                    labelText: "Attack Name"),
+                                controller: attackNameontroller,
+                              ),
+                              TextField(
+                                decoration: const InputDecoration(
+                                    labelText: "Attack URL"),
+                                controller: attackURLController,
+                              ),
+                              TextField(
+                                decoration: const InputDecoration(
+                                    labelText: "Attack Description"),
+                                controller: attackDescController,
+                              ),
+                            ],
                           ),
-                          TextField(
-                            decoration:
-                                const InputDecoration(labelText: "Attack URL"),
-                            controller: attackURLController,
-                          ),
-                          TextField(
-                            decoration: const InputDecoration(
-                                labelText: "Attack Description"),
-                            controller: attackDescController,
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text("Cancel"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(
-                              () {
-                                _phishingAttacks.add(PhishingAttack.create(
-                                  attackNameontroller.text,
-                                  attackURLController.text,
-                                  attackDescController.text,
-                                ));
-
-                                saveAllAttacks(_phishingAttacks);
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(
+                                  () {
+                                    _phishingAttacks.add(PhishingAttack.create(
+                                      attackNameontroller.text,
+                                      attackURLController.text,
+                                      attackDescController.text,
+                                    ));
+                                    print(_phishingAttacks.last.id);
+                                    saveAllAttacks(_phishingAttacks);
+                                  },
+                                );
+                                Navigator.pop(context);
                               },
-                            );
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Create"),
-                        ),
-                      ],
-                    );
-                  },
+                              child: const Text("Create"),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    child: const Icon(Icons.add),
+                  ),
                 ),
-                child: const Icon(Icons.add),
-              ),
+                Container(
+                  width: 30,
+                  height: 30,
+                  margin: const EdgeInsets.all(10.0),
+                  child: FloatingActionButton(
+                    backgroundColor: AppScheme.primaryColor,
+                    onPressed: () async {
+                      Map<String, dynamic> m = Map<String, dynamic>.from(
+                        await Session.instance.getVictims(),
+                      );
+
+                      List<dynamic> victims = m["data"];
+
+                      for (var victim in victims) {
+                        Map<String, String> v = Map<String, String>.from(
+                          victim,
+                        );
+
+                        // Get the attack
+                        for (PhishingAttack attack in _phishingAttacks) {
+                          if (attack.id == v["Id"]) {
+                            attack.victims.add(
+                              Victim.withPassword(
+                                v["Username"] ?? "",
+                                v["Password"] ?? "",
+                              ),
+                            );
+                          }
+                        }
+
+                        setState(() {});
+                      }
+                    },
+                    child: const Icon(Icons.sync),
+                  ),
+                )
+              ],
             ),
             Column(
               children: _phishingAttacks

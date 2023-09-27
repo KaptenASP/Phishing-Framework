@@ -23,7 +23,8 @@ class Session {
     );
   }
 
-  Future<http.Response> getVictims() async {
-    return post(NetworkConsts.url, NetworkConsts.body);
+  Future<Map> getVictims() async {
+    http.Response res = await post(NetworkConsts.url, NetworkConsts.body);
+    return json.decode(res.body);
   }
 }
