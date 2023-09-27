@@ -10,9 +10,12 @@ class PhishingAttack {
   String name;
   String url;
   String description;
+  String status = "offline";
   late String id;
 
-  final List<Victim> _victims = List.empty(growable: true);
+  final List<Victim> _emailed = [];
+  final List<Victim> _clicked = [];
+  final List<Victim> _victims = [];
 
   PhishingAttack.create(this.name, this.url, this.description) {
     id = idGenerator();
@@ -20,11 +23,8 @@ class PhishingAttack {
 
   PhishingAttack.fromid(this.name, this.url, this.description, this.id);
 
-  void addVictim(Victim victim) {
-    victims.add(victim);
-  }
-
-  // get victims
+  List<Victim> get emailed => _emailed;
+  List<Victim> get clicked => _clicked;
   List<Victim> get victims => _victims;
 
   static PhishingAttack fromJson(MapEntry<String, dynamic> json) =>

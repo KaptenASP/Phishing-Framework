@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
-import 'package:phishing_framework/colours.dart';
+import 'package:phishing_framework/AppScheme.dart';
 import 'package:phishing_framework/phishing_homepage.dart';
 
 void main() {
@@ -47,73 +47,69 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Aditya's Phishing Framework",
-          style: AppScheme.headlineStyle,
-        ),
         actions: [
-          FloatingActionButton(
-            backgroundColor: AppScheme.primaryColor,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                final TextEditingController attackNameontroller =
-                    TextEditingController();
-                final TextEditingController attackDescController =
-                    TextEditingController();
-                final TextEditingController attackURLController =
-                    TextEditingController();
+          // FloatingActionButton(
+          //   backgroundColor: AppScheme.primaryColor,
+          //   onPressed: () => showDialog(
+          //     context: context,
+          //     builder: (BuildContext context) {
+          //       final TextEditingController attackNameontroller =
+          //           TextEditingController();
+          //       final TextEditingController attackDescController =
+          //           TextEditingController();
+          //       final TextEditingController attackURLController =
+          //           TextEditingController();
 
-                return AlertDialog(
-                  title: const Text("New Attack"),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        decoration:
-                            const InputDecoration(labelText: "Attack Name"),
-                        controller: attackNameontroller,
-                      ),
-                      TextField(
-                        decoration:
-                            const InputDecoration(labelText: "Attack URL"),
-                        controller: attackURLController,
-                      ),
-                      TextField(
-                        decoration: const InputDecoration(
-                            labelText: "Attack Description"),
-                        controller: attackDescController,
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("Cancel"),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(
-                          () {
-                            _phishing_attacks.add(PhishingAttack.create(
-                              attackNameontroller.text,
-                              attackURLController.text,
-                              attackDescController.text,
-                            ));
+          //       return AlertDialog(
+          //         title: const Text("New Attack"),
+          //         content: Column(
+          //           mainAxisSize: MainAxisSize.min,
+          //           children: [
+          //             TextField(
+          //               decoration:
+          //                   const InputDecoration(labelText: "Attack Name"),
+          //               controller: attackNameontroller,
+          //             ),
+          //             TextField(
+          //               decoration:
+          //                   const InputDecoration(labelText: "Attack URL"),
+          //               controller: attackURLController,
+          //             ),
+          //             TextField(
+          //               decoration: const InputDecoration(
+          //                   labelText: "Attack Description"),
+          //               controller: attackDescController,
+          //             ),
+          //           ],
+          //         ),
+          //         actions: [
+          //           TextButton(
+          //             onPressed: () => Navigator.pop(context),
+          //             child: const Text("Cancel"),
+          //           ),
+          //           TextButton(
+          //             onPressed: () {
+          //               setState(
+          //                 () {
+          //                   _phishing_attacks.add(PhishingAttack.create(
+          //                     attackNameontroller.text,
+          //                     attackURLController.text,
+          //                     attackDescController.text,
+          //                   ));
 
-                            saveAllAttacks(_phishing_attacks);
-                          },
-                        );
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Create"),
-                    ),
-                  ],
-                );
-              },
-            ),
-            child: const Icon(Icons.add),
-          ),
+          //                   saveAllAttacks(_phishing_attacks);
+          //                 },
+          //               );
+          //               Navigator.pop(context);
+          //             },
+          //             child: const Text("Create"),
+          //           ),
+          //         ],
+          //       );
+          //     },
+          //   ),
+          //   child: const Icon(Icons.add),
+          // ),
         ],
       ),
       drawer: Drawer(
@@ -147,36 +143,119 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: ListView(
-        children: _phishing_attacks
-            .map(
-              (e) => InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PhishingHomePage(
-                        attack: e,
+      body: Padding(
+        padding: EdgeInsets.only(
+          top: 20,
+          left: MediaQuery.of(context).size.width / 3,
+          right: MediaQuery.of(context).size.width / 3,
+          bottom: 20,
+        ),
+        child: Column(
+          children: [
+            Text(
+              "Aditya's Phishing Framework",
+              style: AppScheme.headlineStyle,
+            ),
+            Container(
+              width: 30,
+              height: 30,
+              margin: const EdgeInsets.all(10.0),
+              child: FloatingActionButton(
+                backgroundColor: AppScheme.primaryColor,
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    final TextEditingController attackNameontroller =
+                        TextEditingController();
+                    final TextEditingController attackDescController =
+                        TextEditingController();
+                    final TextEditingController attackURLController =
+                        TextEditingController();
+
+                    return AlertDialog(
+                      title: const Text("New Attack"),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            decoration:
+                                const InputDecoration(labelText: "Attack Name"),
+                            controller: attackNameontroller,
+                          ),
+                          TextField(
+                            decoration:
+                                const InputDecoration(labelText: "Attack URL"),
+                            controller: attackURLController,
+                          ),
+                          TextField(
+                            decoration: const InputDecoration(
+                                labelText: "Attack Description"),
+                            controller: attackDescController,
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(
+                              () {
+                                _phishing_attacks.add(PhishingAttack.create(
+                                  attackNameontroller.text,
+                                  attackURLController.text,
+                                  attackDescController.text,
+                                ));
+
+                                saveAllAttacks(_phishing_attacks);
+                              },
+                            );
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Create"),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                child: const Icon(Icons.add),
+              ),
+            ),
+            Column(
+              children: _phishing_attacks
+                  .map(
+                    (e) => InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PhishingHomePage(
+                              attack: e,
+                            ),
+                          ),
+                        );
+                      },
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: AppScheme.primaryColor,
+                          foregroundColor: AppScheme.paragraphColor,
+                          child: Text(e.name.characters.first.toUpperCase(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
+                        title: Text(e.name),
+                        subtitle: Text(e.description),
+                        trailing: const Icon(Icons.favorite_rounded),
                       ),
                     ),
-                  );
-                },
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: AppScheme.primaryColor,
-                    foregroundColor: AppScheme.paragraphColor,
-                    child: Text(e.name.characters.first.toUpperCase(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ),
-                  title: Text(e.name),
-                  subtitle: Text(e.description),
-                  trailing: const Icon(Icons.favorite_rounded),
-                ),
-              ),
+                  )
+                  .toList(),
             )
-            .toList(),
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
-import 'package:phishing_framework/colours.dart';
+import 'package:phishing_framework/AppScheme.dart';
 
 class PhishingHomePage extends StatefulWidget {
   final PhishingAttack attack;
@@ -15,54 +15,44 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.attack.name,
-          style: AppScheme.headlineStyle,
-        ),
-      ),
+      backgroundColor: AppScheme.backgroundColor,
+      appBar: AppBar(),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.only(
+          top: 20,
+          left: MediaQuery.of(context).size.width / 3,
+          right: MediaQuery.of(context).size.width / 3,
+          bottom: 20,
+        ),
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Text(
+            widget.attack.name,
+            style: AppScheme.headlineStyle,
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: AppScheme.infoCard(widget.attack.description),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                "Attack Details",
-                style: AppScheme.secondaryHeader,
+              AppScheme.metricCard(
+                "Emailed",
+                widget.attack.emailed.length,
+                "ppl",
               ),
-              Row(
-                children: [
-                  const Icon(Icons.link),
-                  Text(
-                    "  URL: ",
-                    style: AppScheme.tertiaryHeader,
-                  ),
-                  Text(
-                    widget.attack.url,
-                    style: AppScheme.paragraphStyle,
-                  ),
-                ],
+              AppScheme.metricCard(
+                "Clicked",
+                widget.attack.clicked.length,
+                "ppl",
               ),
-              Row(
-                children: [
-                  const Icon(Icons.description_outlined),
-                  Text(
-                    "  Description: ",
-                    style: AppScheme.tertiaryHeader,
-                  ),
-                  Text(
-                    widget.attack.description,
-                    style: AppScheme.paragraphStyle,
-                  ),
-                ],
-              ),
-              Text(
-                "Current Statistics",
-                style: AppScheme.secondaryHeader,
+              AppScheme.metricCard(
+                "Victims",
+                widget.attack.victims.length,
+                "ppl",
               ),
             ],
-          )
+          ),
         ],
       ),
     );
