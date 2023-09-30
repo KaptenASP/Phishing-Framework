@@ -13,6 +13,7 @@ class PhishingAttack {
   late String url;
   String description;
   String template;
+  String redirect_url;
   String status = "offline";
   late String id;
 
@@ -20,14 +21,15 @@ class PhishingAttack {
   final List<Victim> _clicked = [];
   final List<Victim> _victims = [];
 
-  PhishingAttack.create(this.name, this.description, this.template) {
+  PhishingAttack.create(
+      this.name, this.description, this.template, this.redirect_url) {
     id = idGenerator();
     url = NetworkConsts.getAttackUrl(id);
-    Session.instance.addTemplateToAttack(id, template);
+    Session.instance.addTemplateToAttack(id, template, redirect_url);
   }
 
-  PhishingAttack.createExisting(
-      this.name, this.url, this.description, this.id, this.template);
+  PhishingAttack.createExisting(this.name, this.url, this.description, this.id,
+      this.template, this.redirect_url);
 
   List<Victim> get emailed => _emailed;
   List<Victim> get clicked => _clicked;
@@ -40,6 +42,7 @@ class PhishingAttack {
         json.value['description'] as String,
         json.value['id'] as String,
         json.value['template'] as String,
+        json.value['redirect_url'] as String,
       );
 
   Map<String, dynamic> toJson() => {
@@ -48,6 +51,7 @@ class PhishingAttack {
         'description': description,
         'id': id,
         'template': template,
+        'redirect_url': redirect_url,
       };
 }
 

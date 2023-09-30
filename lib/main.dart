@@ -110,6 +110,8 @@ class _HomePageState extends State<HomePage> {
                           TextEditingController();
                       final TextEditingController attackDescController =
                           TextEditingController();
+                      final TextEditingController attackRedirectUrl =
+                          TextEditingController();
                       String templateName = "";
 
                       return AlertDialog(
@@ -143,6 +145,11 @@ class _HomePageState extends State<HomePage> {
                                 templateName = value ?? "";
                               },
                             ),
+                            TextField(
+                              decoration: const InputDecoration(
+                                  labelText: "Redirect URL"),
+                              controller: attackRedirectUrl,
+                            ),
                           ],
                         ),
                         actions: [
@@ -154,11 +161,14 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () {
                               setState(
                                 () {
-                                  _phishingAttacks.add(PhishingAttack.create(
-                                    attackNameontroller.text,
-                                    attackDescController.text,
-                                    templateName,
-                                  ));
+                                  _phishingAttacks.add(
+                                    PhishingAttack.create(
+                                      attackNameontroller.text,
+                                      attackDescController.text,
+                                      templateName,
+                                      attackRedirectUrl.text,
+                                    ),
+                                  );
                                   AttackManager.instance
                                       .saveAllAttacks(_phishingAttacks);
                                 },

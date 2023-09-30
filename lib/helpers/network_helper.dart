@@ -34,12 +34,15 @@ class Session {
     return json.decode(res.body);
   }
 
-  Future<void> addTemplateToAttack(String attackId, String templateName) async {
+  Future<void> addTemplateToAttack(
+      String attackId, String templateName, String redirect_url) async {
     http.Response res = await post(
       NetworkConsts.addTemplateToAttackUrl,
       {
         "attack_id": attackId,
         "template_name": templateName,
+        "redirect_url": redirect_url,
+        "operation": ""
       },
     );
 
