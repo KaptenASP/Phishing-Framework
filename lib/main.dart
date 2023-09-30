@@ -110,8 +110,6 @@ class _HomePageState extends State<HomePage> {
                           TextEditingController();
                       final TextEditingController attackDescController =
                           TextEditingController();
-                      final TextEditingController attackURLController =
-                          TextEditingController();
                       String templateName = "";
 
                       return AlertDialog(
@@ -123,11 +121,6 @@ class _HomePageState extends State<HomePage> {
                               decoration: const InputDecoration(
                                   labelText: "Attack Name"),
                               controller: attackNameontroller,
-                            ),
-                            TextField(
-                              decoration: const InputDecoration(
-                                  labelText: "Attack URL"),
-                              controller: attackURLController,
                             ),
                             TextField(
                               decoration: const InputDecoration(

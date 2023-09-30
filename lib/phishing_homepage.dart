@@ -33,6 +33,7 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
             width: MediaQuery.of(context).size.width,
             child: AppScheme.infoCard(widget.attack.description),
           ),
+          SelectableText(widget.attack.url),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

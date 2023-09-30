@@ -23,9 +23,10 @@ class PhishingAttack {
   PhishingAttack.create(this.name, this.description, this.template) {
     id = idGenerator();
     url = NetworkConsts.getAttackUrl(id);
+    Session.instance.addTemplateToAttack(id, template);
   }
 
-  PhishingAttack.fromid(
+  PhishingAttack.createExisting(
       this.name, this.url, this.description, this.id, this.template);
 
   List<Victim> get emailed => _emailed;
@@ -33,7 +34,7 @@ class PhishingAttack {
   List<Victim> get victims => _victims;
 
   static PhishingAttack fromJson(MapEntry<String, dynamic> json) =>
-      PhishingAttack.fromid(
+      PhishingAttack.createExisting(
         json.value['name'] as String,
         json.value['url'] as String,
         json.value['description'] as String,
