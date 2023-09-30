@@ -9,19 +9,23 @@ class AppScheme {
 
   // Specific Colours:
   static Color infoColor = const Color.fromARGB(255, 232, 242, 252);
+  static Color infoColorText = const Color.fromARGB(255, 0, 66, 128);
+  static Color successColor = const Color.fromARGB(255, 232, 249, 238);
+  static Color successColorText = const Color.fromARGB(255, 31, 54, 38);
 
-  static Card infoCard(String text) => Card(
+  static Card infoCard(Widget w) => Card(
         color: infoColor,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Text(
-            "‼ $text",
-            style: TextStyle(
-              color: paragraphColor,
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-            ),
-          ),
+          child: w,
+        ),
+      );
+
+  static Card successCard(Widget w) => Card(
+        color: successColor,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: w,
         ),
       );
 

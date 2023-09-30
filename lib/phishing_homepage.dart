@@ -31,9 +31,54 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            child: AppScheme.infoCard(widget.attack.description),
+            child: AppScheme.infoCard(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Description",
+                    style: TextStyle(
+                      color: AppScheme.infoColorText,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    widget.attack.description,
+                    style: TextStyle(
+                      color: AppScheme.paragraphColor,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          SelectableText(widget.attack.url),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: AppScheme.successCard(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Successfully Deployed!",
+                    style: TextStyle(
+                      color: AppScheme.successColorText,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SelectableText(
+                    widget.attack.url,
+                    style: TextStyle(
+                      color: AppScheme.paragraphColor,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
