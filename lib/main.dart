@@ -41,12 +41,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _phishingAttacks.addAll(loadAllAttacks());
+    _phishingAttacks.addAll(AttackManager.instance.loadAllAttacks());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    AttackManager manager = AttackManager.instance;
+
     return Scaffold(
       appBar: AppBar(),
       drawer: Drawer(
@@ -147,7 +149,8 @@ class _HomePageState extends State<HomePage> {
                                     attackURLController.text,
                                     attackDescController.text,
                                   ));
-                                  saveAllAttacks(_phishingAttacks);
+                                  AttackManager.instance
+                                      .saveAllAttacks(_phishingAttacks);
                                 },
                               );
                               Navigator.pop(context);

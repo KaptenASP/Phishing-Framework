@@ -1,4 +1,5 @@
 import 'package:phishing_framework/helpers/file_helper.dart';
+import 'package:phishing_framework/helpers/network_helper.dart';
 import 'package:phishing_framework/victim.dart';
 
 String idGenerator() {
@@ -43,28 +44,52 @@ class PhishingAttack {
       };
 }
 
-Future<void> saveAllAttacks(List<PhishingAttack> attacks) async {
-  Map<String, dynamic> m = {};
+class AttackManager {
+  final List<String> _templateNames = [];
 
-  for (final attack in attacks) {
-    m[attack.id] = attack.toJson();
+  AttackManager._privateConstructor() {
+    getSavedTemplates();
   }
 
-  Storage.instance.saveToStorage('attacks', m);
-}
+  static final AttackManager instance = AttackManager._privateConstructor();
 
-List<PhishingAttack> loadAllAttacks() {
-  final Map<String, dynamic>? m = Storage.instance.loadFromStorage('attacks');
+  Future<void> getSavedTemplates() async {
+    Map<String, dynamic> templates =
+        Map<String, dynamic>.from(await Session.instance.getTemplates());
 
-  if (m == null) {
-    return [];
+    // Create list string from templates['templates']
+    List<dynamic> templateNames = templates['templates'];
+
+    for (String templateName in templateNames) {
+      _templateNames.add(templateName);
+    }
+
+    print(_templateNames);
   }
 
-  final List<PhishingAttack> attacks = [];
+  Future<void> saveAllAttacks(List<PhishingAttack> attacks) async {
+    Map<String, dynamic> m = {};
 
-  for (final entry in m.entries) {
-    attacks.add(PhishingAttack.fromJson(entry));
+    for (final attack in attacks) {
+      m[attack.id] = attack.toJson();
+    }
+
+    Storage.instance.saveToStorage('attacks', m);
   }
 
-  return attacks;
+  List<PhishingAttack> loadAllAttacks() {
+    final Map<String, dynamic>? m = Storage.instance.loadFromStorage('attacks');
+
+    if (m == null) {
+      return [];
+    }
+
+    final List<PhishingAttack> attacks = [];
+
+    for (final entry in m.entries) {
+      attacks.add(PhishingAttack.fromJson(entry));
+    }
+
+    return attacks;
+  }
 }

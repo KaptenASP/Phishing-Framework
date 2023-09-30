@@ -24,7 +24,13 @@ class Session {
   }
 
   Future<Map> getVictims() async {
-    http.Response res = await post(NetworkConsts.url, NetworkConsts.body);
+    http.Response res =
+        await post(NetworkConsts.victimUrl, NetworkConsts.victimBody);
+    return json.decode(res.body);
+  }
+
+  Future<Map> getTemplates() async {
+    http.Response res = await post(NetworkConsts.templateUrl, {});
     return json.decode(res.body);
   }
 }
