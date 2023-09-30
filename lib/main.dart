@@ -112,6 +112,7 @@ class _HomePageState extends State<HomePage> {
                           TextEditingController();
                       final TextEditingController attackURLController =
                           TextEditingController();
+                      String templateName = "";
 
                       return AlertDialog(
                         title: const Text("New Attack"),
@@ -133,6 +134,22 @@ class _HomePageState extends State<HomePage> {
                                   labelText: "Attack Description"),
                               controller: attackDescController,
                             ),
+                            // Add a dropdown for templates
+                            DropdownButtonFormField(
+                              decoration: const InputDecoration(
+                                  labelText: "Attack Template"),
+                              items: manager.templateNames
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (String? value) {
+                                templateName = value ?? "";
+                              },
+                            ),
                           ],
                         ),
                         actions: [
@@ -146,8 +163,8 @@ class _HomePageState extends State<HomePage> {
                                 () {
                                   _phishingAttacks.add(PhishingAttack.create(
                                     attackNameontroller.text,
-                                    attackURLController.text,
                                     attackDescController.text,
+                                    templateName,
                                   ));
                                   AttackManager.instance
                                       .saveAllAttacks(_phishingAttacks);

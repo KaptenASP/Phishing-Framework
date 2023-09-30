@@ -1,4 +1,5 @@
 import 'package:phishing_framework/helpers/file_helper.dart';
+import 'package:phishing_framework/helpers/network_consts.dart';
 import 'package:phishing_framework/helpers/network_helper.dart';
 import 'package:phishing_framework/victim.dart';
 
@@ -9,8 +10,9 @@ String idGenerator() {
 
 class PhishingAttack {
   String name;
-  String url;
+  late String url;
   String description;
+  String template;
   String status = "offline";
   late String id;
 
@@ -18,11 +20,13 @@ class PhishingAttack {
   final List<Victim> _clicked = [];
   final List<Victim> _victims = [];
 
-  PhishingAttack.create(this.name, this.url, this.description) {
+  PhishingAttack.create(this.name, this.description, this.template) {
     id = idGenerator();
+    url = NetworkConsts.getAttackUrl(id);
   }
 
-  PhishingAttack.fromid(this.name, this.url, this.description, this.id);
+  PhishingAttack.fromid(
+      this.name, this.url, this.description, this.id, this.template);
 
   List<Victim> get emailed => _emailed;
   List<Victim> get clicked => _clicked;
@@ -34,6 +38,7 @@ class PhishingAttack {
         json.value['url'] as String,
         json.value['description'] as String,
         json.value['id'] as String,
+        json.value['template'] as String,
       );
 
   Map<String, dynamic> toJson() => {
@@ -41,6 +46,7 @@ class PhishingAttack {
         'url': url,
         'description': description,
         'id': id,
+        'template': template,
       };
 }
 
@@ -66,6 +72,8 @@ class AttackManager {
 
     print(_templateNames);
   }
+
+  List<String> get templateNames => _templateNames;
 
   Future<void> saveAllAttacks(List<PhishingAttack> attacks) async {
     Map<String, dynamic> m = {};
