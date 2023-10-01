@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 class AppScheme {
   // General Colours
-  static Color backgroundColor = const Color.fromARGB(255, 255, 255, 255);
-  static Color primaryColor = const Color.fromARGB(255, 243, 210, 193);
+  static Color backgroundColor = const Color.fromARGB(255, 25, 25, 25);
+  static Color primaryColor = const Color.fromARGB(255, 32, 32, 32);
   static Color secondaryColor = const Color.fromARGB(255, 139, 211, 221);
   static Color tertiaryColor = const Color.fromARGB(255, 245, 130, 174);
 
   // Specific Colours:
-  static Color infoColor = const Color.fromARGB(255, 232, 242, 252);
-  static Color infoColorText = const Color.fromARGB(255, 0, 66, 128);
-  static Color successColor = const Color.fromARGB(255, 232, 249, 238);
-  static Color successColorText = const Color.fromARGB(255, 31, 54, 38);
+  static Color infoColor = const Color.fromARGB(150, 29, 40, 46);
+  static Color successColor = const Color.fromARGB(150, 34, 43, 38);
+  // static Color infoColorText = const Color.fromARGB(255, 0, 66, 128);
+  // static Color successColorText = const Color.fromARGB(255, 31, 54, 38);
 
   static Card infoCard(Widget w) => Card(
         color: infoColor,
@@ -52,8 +52,8 @@ class AppScheme {
       );
 
   // Font Colours:
-  static Color headlineColor = const Color.fromARGB(255, 0, 24, 88);
-  static Color paragraphColor = const Color.fromARGB(255, 23, 44, 102);
+  static Color headlineColor = const Color.fromARGB(255, 212, 212, 212);
+  static Color paragraphColor = const Color.fromARGB(255, 155, 155, 155);
 
   // Styles:
   static TextStyle headlineStyle = TextStyle(

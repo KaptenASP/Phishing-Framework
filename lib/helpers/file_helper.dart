@@ -7,7 +7,8 @@ class Storage {
 
   final LocalStorage storage = LocalStorage('phishing_framework_store');
 
-  Map<String, dynamic>? loadFromStorage(String key) {
+  Future<Map<String, dynamic>?> loadFromStorage(String key) async {
+    await storage.ready;
     dynamic data = storage.getItem(key);
     if (data == null) {
       print("NO DATA FOUND!");
@@ -18,8 +19,9 @@ class Storage {
     return res;
   }
 
-  void saveToStorage(String key, Map<String, dynamic> data) {
-    storage.setItem(key, data);
+  Future<void> saveToStorage(String key, Map<String, dynamic> data) async {
+    await storage.ready;
+    await storage.setItem(key, data);
     print("SAVED!");
   }
 }

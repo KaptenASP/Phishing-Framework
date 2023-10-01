@@ -1,0 +1,3 @@
+{
+    "dotnet.defaultSolution": "build/windows/phishing_framework.sln"
+}

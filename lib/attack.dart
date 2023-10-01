@@ -74,8 +74,6 @@ class AttackManager {
     for (String templateName in templateNames) {
       _templateNames.add(templateName);
     }
-
-    print(_templateNames);
   }
 
   List<String> get templateNames => _templateNames;
@@ -90,8 +88,9 @@ class AttackManager {
     Storage.instance.saveToStorage('attacks', m);
   }
 
-  List<PhishingAttack> loadAllAttacks() {
-    final Map<String, dynamic>? m = Storage.instance.loadFromStorage('attacks');
+  Future<List<PhishingAttack>> loadAllAttacks() async {
+    final Map<String, dynamic>? m =
+        await Storage.instance.loadFromStorage('attacks');
 
     if (m == null) {
       return [];

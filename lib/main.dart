@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
 import 'package:phishing_framework/app_scheme.dart';
+import 'package:phishing_framework/create_attack.dart';
 import 'package:phishing_framework/helpers/network_helper.dart';
 import 'package:phishing_framework/phishing_homepage.dart';
 import 'package:phishing_framework/victim.dart';
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Phishing Framework',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(
-          brightness: Brightness.light,
+          brightness: Brightness.dark,
           backgroundColor: AppScheme.backgroundColor,
           cardColor: AppScheme.backgroundColor,
         ),
@@ -41,7 +43,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _phishingAttacks.addAll(AttackManager.instance.loadAllAttacks());
+    AttackManager.instance.loadAllAttacks().then((value) {
+      setState(() {
+        _phishingAttacks.addAll(value);
+      });
+    });
     super.initState();
   }
 
@@ -184,6 +190,7 @@ class _HomePageState extends State<HomePage> {
                   child: const Icon(Icons.add),
                 ),
               ),
+              // ),
               Container(
                 width: 30,
                 height: 30,

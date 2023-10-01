@@ -38,7 +38,7 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
                   Text(
                     "Description",
                     style: TextStyle(
-                      color: AppScheme.infoColorText,
+                      color: AppScheme.headlineColor,
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                     ),
@@ -63,7 +63,7 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
                   Text(
                     "Successfully Deployed!",
                     style: TextStyle(
-                      color: AppScheme.successColorText,
+                      color: AppScheme.headlineColor,
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                     ),
