@@ -17,4 +17,14 @@ class Victim {
   void setStatus(PersonStatus status) {
     this.status = status;
   }
+
+  static Victim fromJson(Map<String, dynamic> json) => Victim.withPassword(
+        json['email'] as String,
+        json['password'] as String,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'email': email,
+        'password': password,
+      };
 }

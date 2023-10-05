@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
 import 'package:phishing_framework/app_scheme.dart';
-import 'package:phishing_framework/create_attack.dart';
 import 'package:phishing_framework/helpers/network_helper.dart';
 import 'package:phishing_framework/phishing_homepage.dart';
 import 'package:phishing_framework/victim.dart';
@@ -222,7 +221,9 @@ class _HomePageState extends State<HomePage> {
                         }
                       }
 
-                      setState(() {});
+                      setState(() {
+                        AttackManager.instance.saveAllAttacks(_phishingAttacks);
+                      });
                     }
                   },
                   child: const Icon(Icons.sync),
@@ -246,8 +247,12 @@ class _HomePageState extends State<HomePage> {
                     },
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: AppScheme.primaryColor,
-                        foregroundColor: AppScheme.paragraphColor,
+                        // backgroundColor: AppScheme.primaryColor,
+                        // foregroundColor: AppScheme.paragraphColor,
+                        // Make background colour image background from image at './assets/gradient1.jpeg'
+                        backgroundImage: const AssetImage(
+                          'assets/images/g2.jpeg',
+                        ),
                         child: Text(e.name.characters.first.toUpperCase(),
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,

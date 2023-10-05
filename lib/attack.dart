@@ -28,8 +28,29 @@ class PhishingAttack {
     Session.instance.addTemplateToAttack(id, template, redirect_url);
   }
 
-  PhishingAttack.createExisting(this.name, this.url, this.description, this.id,
-      this.template, this.redirect_url);
+  PhishingAttack.createExisting(
+    this.name,
+    this.url,
+    this.description,
+    this.id,
+    this.template,
+    this.redirect_url,
+    victims,
+    emailed,
+    clicked,
+  ) {
+    for (var element in victims) {
+      _victims.add(Victim.fromJson(element));
+    }
+
+    for (var element in emailed) {
+      _emailed.add(Victim.fromJson(element));
+    }
+
+    for (var element in clicked) {
+      _clicked.add(Victim.fromJson(element));
+    }
+  }
 
   List<Victim> get emailed => _emailed;
   List<Victim> get clicked => _clicked;
@@ -43,6 +64,9 @@ class PhishingAttack {
         json.value['id'] as String,
         json.value['template'] as String,
         json.value['redirect_url'] as String,
+        json.value['victims'],
+        json.value['emailed'],
+        json.value['clicked'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -52,6 +76,9 @@ class PhishingAttack {
         'id': id,
         'template': template,
         'redirect_url': redirect_url,
+        'victims': _victims.map((e) => e.toJson()).toList(),
+        'emailed': _emailed.map((e) => e.toJson()).toList(),
+        'clicked': _clicked.map((e) => e.toJson()).toList(),
       };
 }
 
