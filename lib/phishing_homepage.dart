@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
 import 'package:phishing_framework/app_scheme.dart';
+import 'package:phishing_framework/email_selector.dart';
 
 class PhishingHomePage extends StatefulWidget {
   final PhishingAttack attack;
@@ -96,6 +97,28 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
                 "Victims",
                 widget.attack.victims.length,
                 "ppl",
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                margin: const EdgeInsets.all(10.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    // Navigate to EmailSelector()
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EmailSelector(),
+                      ),
+                    );
+                  },
+                  backgroundColor: AppScheme.primaryColor,
+                  child: const Icon(Icons.email),
+                ),
               ),
             ],
           ),

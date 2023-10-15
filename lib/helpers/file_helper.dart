@@ -24,4 +24,10 @@ class Storage {
     await storage.setItem(key, data);
     print("SAVED!");
   }
+
+  Future<void> deleteFromStorage(String key) async {
+    await storage.ready;
+    await storage.deleteItem(key);
+    print("DELETED!");
+  }
 }

@@ -189,7 +189,6 @@ class _HomePageState extends State<HomePage> {
                   child: const Icon(Icons.add),
                 ),
               ),
-              // ),
               Container(
                 width: 30,
                 height: 30,
