@@ -38,14 +38,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<PhishingAttack> _phishingAttacks = [];
+  // final List<PhishingAttack> _phishingAttacks = [];
 
   @override
   void initState() {
     AttackManager.instance.loadAllAttacks().then((value) {
-      setState(() {
-        _phishingAttacks.addAll(value);
-      });
+      setState(() {});
     });
     super.initState();
   }
@@ -166,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () {
                               setState(
                                 () {
-                                  _phishingAttacks.add(
+                                  AttackManager.instance.addAttack(
                                     PhishingAttack.create(
                                       attackNameontroller.text,
                                       attackDescController.text,
@@ -174,8 +172,6 @@ class _HomePageState extends State<HomePage> {
                                       attackRedirectUrl.text,
                                     ),
                                   );
-                                  AttackManager.instance
-                                      .saveAllAttacks(_phishingAttacks);
                                 },
                               );
                               Navigator.pop(context);
@@ -209,7 +205,8 @@ class _HomePageState extends State<HomePage> {
                       );
 
                       // Get the attack
-                      for (PhishingAttack attack in _phishingAttacks) {
+                      for (PhishingAttack attack
+                          in AttackManager.instance.attacks) {
                         if (attack.id == v["Id"]) {
                           attack.victims.add(
                             Victim.withPassword(
@@ -221,17 +218,33 @@ class _HomePageState extends State<HomePage> {
                       }
 
                       setState(() {
-                        AttackManager.instance.saveAllAttacks(_phishingAttacks);
+                        AttackManager.instance.saveAllAttacks();
                       });
                     }
                   },
                   child: const Icon(Icons.sync),
                 ),
-              )
+              ),
+              Container(
+                width: 30,
+                height: 30,
+                margin: const EdgeInsets.all(10.0),
+                child: FloatingActionButton(
+                  heroTag: "delete_all_attacks",
+                  backgroundColor: AppScheme.primaryColor,
+                  onPressed: () => {
+                    setState(() {
+                      // _phishingAttacks.clear();
+                      AttackManager.instance.saveAllAttacks();
+                    })
+                  },
+                  child: const Icon(Icons.dangerous),
+                ),
+              ),
             ],
           ),
           Column(
-            children: _phishingAttacks
+            children: AttackManager.instance.attacks
                 .map(
                   (e) => InkWell(
                     onTap: () {

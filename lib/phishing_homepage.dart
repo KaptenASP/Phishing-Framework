@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
 import 'package:phishing_framework/app_scheme.dart';
 import 'package:phishing_framework/email_selector.dart';
+import 'package:phishing_framework/victim.dart';
 
 class PhishingHomePage extends StatefulWidget {
   final PhishingAttack attack;
@@ -13,6 +14,15 @@ class PhishingHomePage extends StatefulWidget {
 }
 
 class _PhishingHomePageState extends State<PhishingHomePage> {
+  List<String> victimList = <String>[
+    "victims",
+    "targets",
+    "emailed",
+    "clicked"
+  ];
+  String dropdownValue = "victims";
+  int idx = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,6 +94,11 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               AppScheme.metricCard(
+                "Targets",
+                widget.attack.targets.length,
+                "ppl",
+              ),
+              AppScheme.metricCard(
                 "Emailed",
                 widget.attack.emailed.length,
                 "ppl",
@@ -120,31 +135,113 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
                   child: const Icon(Icons.email),
                 ),
               ),
+              Container(
+                width: 30,
+                height: 30,
+                margin: const EdgeInsets.all(10.0),
+                child: FloatingActionButton(
+                  // Add target
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("Add Target"),
+                      content: TextField(
+                        decoration: const InputDecoration(
+                          labelText: "Email",
+                        ),
+                        onSubmitted: (value) {
+                          setState(() {
+                            widget.attack.addTarget(Victim(value));
+                            AttackManager.instance.saveAllAttacks();
+                          });
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  ),
+                  backgroundColor: AppScheme.primaryColor,
+                  child: const Icon(Icons.contact_emergency_outlined),
+                ),
+              ),
+              Container(
+                width: 30,
+                height: 30,
+                margin: const EdgeInsets.all(10.0),
+                child: FloatingActionButton(
+                  // Add target
+                  onPressed: () => setState(() {
+                    widget.attack.removeAllTargets();
+                  }),
+                  backgroundColor: AppScheme.primaryColor,
+                  child: const Icon(Icons.delete_forever_outlined),
+                ),
+              ),
             ],
           ),
-          Text(
-            "Victims",
-            style: AppScheme.secondaryHeader,
+          DropdownMenu<String>(
+            initialSelection: victimList.first,
+            onSelected: (String? value) {
+              // This is called when the user selects an item.
+              setState(() {
+                idx = victimList.indexOf(value!);
+                dropdownValue = value;
+              });
+            },
+            dropdownMenuEntries:
+                victimList.map<DropdownMenuEntry<String>>((String value) {
+              return DropdownMenuEntry<String>(value: value, label: value);
+            }).toList(),
           ),
-          SizedBox(
-            height: 200,
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: widget.attack.victims.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(
-                    "email: ${widget.attack.victims[index].email}",
-                  ),
-                  subtitle: Text(
-                    "password: ${widget.attack.victims[index].password}",
-                  ),
-                );
-              },
-            ),
-          ),
+          createVictimList(
+            // lambda expression where VictimViewer.idx is used
+            idx == 0
+                ? widget.attack.victims
+                : idx == 1
+                    ? widget.attack.targets
+                    : idx == 2
+                        ? widget.attack.emailed
+                        : widget.attack.clicked,
+          )
         ],
       ),
     );
   }
 }
+
+SizedBox createVictimList(List<Victim> victims) {
+  return SizedBox(
+    height: 200,
+    child: ListView.builder(
+      scrollDirection: Axis.vertical,
+      itemCount: victims.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(
+            "email: ${victims[index].email}",
+          ),
+          subtitle: Text(
+            "password: ${victims[index].password}",
+          ),
+        );
+      },
+    ),
+  );
+}
+
+// class VictimViewer extends StatefulWidget {
+//   const VictimViewer({super.key});
+//   static const list = <String>["victims", "targets", "emailed", "clicked"];
+//   static int idx = 0;
+
+//   @override
+//   State<VictimViewer> createState() => _VictimViewerState();
+// }
+
+// class _VictimViewerState extends State<VictimViewer> {
+//   String dropdownValue = VictimViewer.list.first;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return 
+//   }
+// }
