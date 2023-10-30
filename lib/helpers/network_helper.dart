@@ -49,4 +49,30 @@ class Session {
     print(res.statusCode);
     print(res.body);
   }
+
+  Future<void> sendEmail(
+    List<Map<String, String>> victims, 
+    String fromName, 
+    String fromEmail, 
+    String subject, 
+    String html, 
+    List<Map<String, String>> fields,
+    String phishingLink
+  ) async {
+    http.Response res = await post(
+      NetworkConsts.emailSendUrl,
+      {
+        "victims": victims,
+        "from": fromName,
+        "from_email": fromEmail,
+        "subject": subject,
+        "phishing_link": phishingLink,
+        "html": html,
+        "additional_fields": fields,
+      },
+    );
+
+    print(res.statusCode);
+    print(res.body);
+  }
 }

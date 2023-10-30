@@ -212,6 +212,7 @@ class _HomePageState extends State<HomePage> {
                             Victim.withPassword(
                               v["Username"] ?? "",
                               v["Password"] ?? "",
+                              v["Name"] ?? "",
                             ),
                           );
                         }

@@ -127,7 +127,7 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EmailSelector(),
+                        builder: (context) => EmailSelector(widget.attack),
                       ),
                     );
                   },
@@ -140,27 +140,63 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
                 height: 30,
                 margin: const EdgeInsets.all(10.0),
                 child: FloatingActionButton(
+                  heroTag: "addTarget",
+                  backgroundColor: AppScheme.primaryColor,
                   // Add target
                   onPressed: () => showDialog(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text("Add Target"),
-                      content: TextField(
-                        decoration: const InputDecoration(
-                          labelText: "Email",
+                    builder: (BuildContext context) {
+                      final TextEditingController emailController =
+                          TextEditingController();
+                      final TextEditingController nameController =
+                          TextEditingController();
+
+                      return AlertDialog(
+                        title: const Text("Add Target"),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              controller: emailController,
+                              decoration: const InputDecoration(
+                                labelText: "Email",
+                              ),
+                            ),
+                            TextField(
+                              controller: nameController,
+                              decoration: const InputDecoration(
+                                labelText: "Name",
+                              ),
+                            ),
+                          ],
                         ),
-                        onSubmitted: (value) {
-                          setState(() {
-                            widget.attack.addTarget(Victim(value));
-                            AttackManager.instance.saveAllAttacks();
-                          });
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                widget.attack.addTarget(
+                                  Victim(
+                                    emailController.text,
+                                    nameController.text,
+                                  ),
+                                );
+                                AttackManager.instance.saveAllAttacks();
+                              });
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Add"),
+                          ),
+                        ],
+                      );
+                    }
                   ),
-                  backgroundColor: AppScheme.primaryColor,
-                  child: const Icon(Icons.contact_emergency_outlined),
+                  child: const Icon(Icons.contact_emergency),
                 ),
               ),
               Container(
@@ -227,21 +263,3 @@ SizedBox createVictimList(List<Victim> victims) {
     ),
   );
 }
-
-// class VictimViewer extends StatefulWidget {
-//   const VictimViewer({super.key});
-//   static const list = <String>["victims", "targets", "emailed", "clicked"];
-//   static int idx = 0;
-
-//   @override
-//   State<VictimViewer> createState() => _VictimViewerState();
-// }
-
-// class _VictimViewerState extends State<VictimViewer> {
-//   String dropdownValue = VictimViewer.list.first;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return 
-//   }
-// }
