@@ -17,10 +17,7 @@ class PhishingAttack {
   String status = "offline";
   late String id;
 
-  final List<Victim> _emailed = [];
-  final List<Victim> _clicked = [];
-  final List<Victim> _victims = [];
-  final List<Victim> _targets = [];
+  final Map<int, Victim> _victims = {};
 
   PhishingAttack.create(
       this.name, this.description, this.template, this.redirectUrl) {
@@ -37,44 +34,35 @@ class PhishingAttack {
     this.template,
     this.redirectUrl,
     victims,
-    emailed,
-    clicked,
-    targets,
   ) {
+
     for (var element in victims) {
-      _victims.add(Victim.fromJson(element));
-    }
-
-    for (var element in emailed) {
-      _emailed.add(Victim.fromJson(element));
-    }
-
-    for (var element in clicked) {
-      _clicked.add(Victim.fromJson(element));
-    }
-
-    for (var element in targets) {
-      _targets.add(Victim.fromJson(element));
+      Victim v = Victim.fromJson(element);
+      _victims[v.ident] = v;
     }
   }
 
-  List<Victim> get emailed => _emailed;
-  List<Victim> get clicked => _clicked;
-  List<Victim> get victims => _victims;
-  List<Victim> get targets => _targets;
+  List<Victim> get targets => _victims.values.where((e) => e.state == VictimState.target).toList();
+  List<Victim> get emailed => _victims.values.where((e) => e.state == VictimState.emailed).toList();
+  List<Victim> get clicked => _victims.values.where((e) => e.state == VictimState.clicked).toList();
+  List<Victim> get victims => _victims.values.where((e) => e.state == VictimState.victim).toList();
 
   // Add target
-  void addTarget(Victim victim) {
-    _targets.add(victim);
+  void addVictim(Victim victim) {
+    _victims[victim.ident] = victim;
   }
 
   // Remove target
-  void removeTarget(Victim victim) {
-    _targets.remove(victim);
+  void removeVictim(int id) {
+    _victims.remove(id);
   }
 
-  void removeAllTargets() {
-    _targets.clear();
+  Victim getVictim(int id) {
+    return _victims[id]!;
+  }
+
+  void removeAllVictims() {
+    _victims.clear();
   }
 
   static PhishingAttack fromJson(MapEntry<String, dynamic> json) =>
@@ -85,10 +73,7 @@ class PhishingAttack {
         json.value['id'] as String,
         json.value['template'] as String,
         json.value['redirect_url'] as String,
-        json.value['victims'],
-        json.value['emailed'],
-        json.value['clicked'],
-        json.value['targets'],
+        json.value['victims'] as List<dynamic>,
       );
 
   Map<String, dynamic> toJson() => {
@@ -98,10 +83,7 @@ class PhishingAttack {
         'id': id,
         'template': template,
         'redirect_url': redirectUrl,
-        'victims': _victims.map((e) => e.toJson()).toList(),
-        'emailed': _emailed.map((e) => e.toJson()).toList(),
-        'clicked': _clicked.map((e) => e.toJson()).toList(),
-        'targets': _targets.map((e) => e.toJson()).toList(),
+        'victims': _victims.values.map((e) => e.toJson()).toList(),
       };
 }
 
@@ -132,6 +114,11 @@ class AttackManager {
 
   Future<void> addAttack(PhishingAttack attack) async {
     _attacks.add(attack);
+    await saveAllAttacks();
+  }
+
+  Future<void> deleteAllAttacks() async {
+    _attacks.clear();
     await saveAllAttacks();
   }
 

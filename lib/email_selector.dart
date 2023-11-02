@@ -86,13 +86,6 @@ class _EmailSelectorState extends State<EmailSelector> {
                     color: AppScheme.successColor,
                     child: Column(
                       children: [
-                        // Expanded(
-                        //   // child: Image.asset(
-                        //   //   EmailTemplateManager
-                        //   //       .instance.templates[index].imgPath,
-                        //   //   fit: BoxFit.cover,
-                        //   // ),
-                        // ),
                         Text(
                           EmailTemplateManager.instance.templates[index].name,
                         ),

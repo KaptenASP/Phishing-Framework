@@ -180,7 +180,7 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
                           TextButton(
                             onPressed: () {
                               setState(() {
-                                widget.attack.addTarget(
+                                widget.attack.addVictim(
                                   Victim(
                                     emailController.text,
                                     nameController.text,
@@ -206,7 +206,7 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
                 child: FloatingActionButton(
                   // Add target
                   onPressed: () => setState(() {
-                    widget.attack.removeAllTargets();
+                    widget.attack.removeAllVictims();
                   }),
                   backgroundColor: AppScheme.primaryColor,
                   child: const Icon(Icons.delete_forever_outlined),
