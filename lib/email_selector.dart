@@ -169,7 +169,7 @@ class _EmailTemplatePageState extends State<EmailTemplatePage> {
             onPressed: () {
               setState(
                 () {
-                  List<Map<String, String>> victimList = widget.attack.targets.map((e) => {"name": e.name, "email": e.email}).toList();
+                  List<Map<String, String>> victimList = widget.attack.targets.map((e) => {"name": e.name, "email": e.email, "victimId": e.ident as String}).toList();
 
                   Session.instance.sendEmail(
                     victimList, 

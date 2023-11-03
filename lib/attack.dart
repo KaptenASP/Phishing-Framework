@@ -22,7 +22,7 @@ class PhishingAttack {
   PhishingAttack.create(
       this.name, this.description, this.template, this.redirectUrl) {
     id = idGenerator();
-    url = NetworkConsts.getAttackUrl(id);
+    url = NetworkConsts.getDemoAttackUrl(id);
     Session.instance.addTemplateToAttack(id, template, redirectUrl);
   }
 

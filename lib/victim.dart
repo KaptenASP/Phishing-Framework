@@ -31,6 +31,7 @@ class Victim {
 
   void setPassword(String password) {
     this.password = password;
+    setState(VictimState.victim);
   }
 
   void setIpDetails(IpDetails ipDetails) {
@@ -43,6 +44,10 @@ class Victim {
 
   void setDeviceDetails(String deviceDetails) {
     this.deviceDetails = deviceDetails;
+  }
+
+  void setState(VictimState state) {
+    this.state = state;
   }
 
   static Victim fromJson(Map<String, dynamic> json) => Victim.fromMemory(

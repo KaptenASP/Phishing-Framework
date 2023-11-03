@@ -72,7 +72,7 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Successfully Deployed!",
+                    "Successfully Deployed! Demo URL:",
                     style: TextStyle(
                       color: AppScheme.headlineColor,
                       fontSize: 15,
