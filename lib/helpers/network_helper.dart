@@ -50,6 +50,18 @@ class Session {
     print(res.body);
   }
 
+  Future<void> createNewTemplate(String name, String html) async {
+    http.Response res = await post(
+      NetworkConsts.createNewTemplateUrl,
+      {
+        "name": name,
+        "html": html,
+      },
+    );
+    print(res.statusCode);
+    print(res.body);
+  }
+
   Future<void> sendEmail(
     List<Map<String, String>> victims, 
     String fromName, 

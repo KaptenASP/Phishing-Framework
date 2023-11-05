@@ -40,8 +40,66 @@ class _EmailSelectorState extends State<EmailSelector> {
                 height: 30,
                 margin: const EdgeInsets.all(10.0),
                 child: FloatingActionButton(
-                  onPressed: () => EmailTemplateManager.instance.deleteFromStorage(),
-                  child: const Icon(Icons.delete),
+                  // On pressed create alert dialogue to create new template
+                  onPressed: () =>  showDialog(
+                    context: context,
+                    builder: (context) {
+                      TextEditingController nameController = TextEditingController();
+                      TextEditingController htmlController = TextEditingController();
+                      TextEditingController additionalFieldsController = TextEditingController();
+
+                      return AlertDialog(
+                        title: const Text("Create New Template"),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              decoration: const InputDecoration(
+                                labelText: "Template Name",
+                              ),
+                              controller: nameController,
+                            ),
+                            TextField(
+                              decoration: const InputDecoration(
+                                labelText: "Template HTML",
+                              ),
+                              controller: htmlController,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: 10,
+                            ),
+                            TextField(
+                              decoration: const InputDecoration(
+                                labelText: "Additional Fields",
+                              ),
+                              controller: additionalFieldsController,
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Close"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              EmailTemplateManager.instance.addTemplate(
+                                EmailTemplate(
+                                  nameController.text,
+                                  htmlController.text,
+                                  additionalFieldsController.text.split(",")
+                                ),
+                              );
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Create"),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  child: const Icon(Icons.add),
                   ),
               ),
               Container(
@@ -169,7 +227,7 @@ class _EmailTemplatePageState extends State<EmailTemplatePage> {
             onPressed: () {
               setState(
                 () {
-                  List<Map<String, String>> victimList = widget.attack.targets.map((e) => {"name": e.name, "email": e.email, "victimId": e.ident as String}).toList();
+                  List<Map<String, String>> victimList = widget.attack.targets.map((e) => {"name": e.name, "email": e.email, "victimId": e.ident.toString()}).toList();
 
                   Session.instance.sendEmail(
                     victimList, 

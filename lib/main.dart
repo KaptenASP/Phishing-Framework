@@ -69,17 +69,56 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            const ListTile(
-              leading: Icon(Icons.message),
-              title: Text('Messages'),
-            ),
-            const ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Profile'),
-            ),
-            const ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
+            // Add a button that when clicked on will open an alert dialog
+            ListTile(
+              title: const Text('Add Template'),
+              onTap: () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  final TextEditingController templateNameController =
+                      TextEditingController();
+                  final TextEditingController templateHtmlController =
+                      TextEditingController();
+
+                  return AlertDialog(
+                    title: const Text("New Template"),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          decoration: const InputDecoration(labelText: "Template Name"),
+                          controller: templateNameController,
+                        ),
+                        SingleChildScrollView(
+                          child: TextField(
+                            decoration: const InputDecoration(labelText: "Template HTML"),
+                            controller: templateHtmlController,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: 10,
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(
+                            () {
+                              Session.instance.createNewTemplate(templateNameController.text, templateHtmlController.text);
+                            },
+                          );
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Create"),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -197,49 +236,10 @@ class _HomePageState extends State<HomePage> {
                     );
 
                     List<dynamic> victims = m["data"];
-
-                    for (var victim in victims) {
-                      Map<String, String> v = Map<String, String>.from(
-                        victim,
-                      );
-
-                      // Get the attack
-                      for (PhishingAttack attack
-                          in AttackManager.instance.attacks) {
-                        if (attack.id == v["Id"]) {
-                          // Get the victim
-                          Victim vic = attack.getVictim(v["victimIdent"] as int);
-
-                          VictimState state = VictimState.emailed;
-
-                          if (v["Ip"] != null) {
-                            vic.setIpDetails(IpDetails(v["Ip"] as String, v["Country"] as String, v["City"] as String));
-                            state = VictimState.clicked;
-                          }
-
-                          if (v["BrowserPlugins"] != null) {
-                            vic.setBrowserPlugins(v["BrowserPlugins"] as String);
-                            state = VictimState.clicked;
-                          }
-
-                          if (v["DeviceDetails"] != null) {
-                            vic.setDeviceDetails(v["DeviceDetails"] as String);
-                            state = VictimState.clicked;
-                          }
-
-                          if (v["password"] != null) {
-                            vic.setPassword(v["password"] as String);
-                            state = VictimState.victim;
-                          }
-
-                          vic.setState(state);
-                        }
-                      }
-
-                      setState(() {
-                        AttackManager.instance.saveAllAttacks();
+                    
+                    setState(() {
+                        AttackManager.instance.syncAttacks(victims);
                       });
-                    }
                   },
                   child: const Icon(Icons.sync),
                 ),

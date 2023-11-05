@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:phishing_framework/helpers/file_helper.dart';
 import 'package:phishing_framework/helpers/network_consts.dart';
 import 'package:phishing_framework/helpers/network_helper.dart';
@@ -89,7 +91,7 @@ class PhishingAttack {
 
 class AttackManager {
   final List<String> _templateNames = [];
-  final List<PhishingAttack> _attacks = [];
+  final Map<String, PhishingAttack> _attacks = {};
 
   AttackManager._privateConstructor() {
     getSavedTemplates();
@@ -110,10 +112,10 @@ class AttackManager {
   }
 
   List<String> get templateNames => _templateNames;
-  List<PhishingAttack> get attacks => _attacks;
+  List<PhishingAttack> get attacks => _attacks.values.toList();
 
   Future<void> addAttack(PhishingAttack attack) async {
-    _attacks.add(attack);
+    _attacks[attack.id] = attack;
     await saveAllAttacks();
   }
 
@@ -123,12 +125,7 @@ class AttackManager {
   }
 
   Future<void> saveAllAttacks() async {
-    Map<String, dynamic> m = {};
-
-    for (final attack in _attacks) {
-      m[attack.id] = attack.toJson();
-    }
-
+    Map<String, dynamic> m = _attacks.map((key, value) => MapEntry(key, value.toJson()));
     Storage.instance.saveToStorage('attacks', m);
   }
 
@@ -141,7 +138,58 @@ class AttackManager {
     }
 
     for (final entry in m.entries) {
-      _attacks.add(PhishingAttack.fromJson(entry));
+      _attacks[entry.key] = PhishingAttack.fromJson(entry);
     }
+  }
+
+  void syncAttacks(List<dynamic> victims) {
+    for (var victim in victims) {
+      Map<String, String> v = Map<String, String>.from(
+        victim,
+      );
+
+      print(v);
+
+      // Get the attack
+      PhishingAttack attack = _attacks[v["Id"]]!;
+
+      Victim vic = attack.getVictim(int.parse(v["victimIdent"] as String));
+      VictimState state = VictimState.emailed;
+
+      if (v["Ip"] != "") {
+        vic.ipDetails.setIp(v["Ip"] as String);
+        state = VictimState.clicked;
+      }
+
+      if (v["Country"] != "") {
+        vic.ipDetails.setCountry(v["Country"] as String);
+        vic.ipDetails.setCity(v["City"] as String);
+        state = VictimState.clicked;
+      }
+
+      if (v["BrowserPlugins"] != "") {
+        vic.setBrowserPlugins(v["BrowserPlugins"] as String);
+        state = VictimState.clicked;
+      }
+
+      if (v["DeviceDetails"] != "") {
+        vic.setDeviceDetails(v["DeviceDetails"] as String);
+        state = VictimState.clicked;
+      }
+
+      if (v["OtherInfo"] != "") {
+        vic.setOtherInfo(v["OtherInfo"] as String);
+        state = VictimState.clicked;
+      }
+
+      if (v["Password"] != "") {
+        vic.setPassword(v["Password"] as String);
+        state = VictimState.victim;
+      }
+
+      vic.setState(state);
+    }
+
+    saveAllAttacks();
   }
 }

